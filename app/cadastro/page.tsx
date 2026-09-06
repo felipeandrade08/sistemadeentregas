@@ -1,10 +1,10 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-export default function CadastroPage() {
+function CadastroForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
@@ -72,4 +72,8 @@ export default function CadastroPage() {
     <p className="muted" style={{ marginTop: 18 }}>Já possui conta? <a href="/login">Entrar</a></p>
     <a href="/" className="back-link">← Voltar para o início</a>
   </section></main>
+}
+
+export default function CadastroPage() {
+  return <Suspense fallback={<main className="auth-page"><section className="auth-card"><div className="brand-mark">E</div><p className="eyebrow">ENTREGAOS</p><h1>Carregando...</h1></section></main>}><CadastroForm /></Suspense>
 }
