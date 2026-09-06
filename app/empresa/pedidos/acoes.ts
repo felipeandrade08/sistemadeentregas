@@ -19,7 +19,7 @@ export async function advanceOrder(orderId: string) {
   const { data: profile } = await supabase.from('profiles').select('company_id').eq('id', user.id).maybeSingle()
   if (!profile?.company_id) return { error: 'Empresa não configurada.' }
 
-  const { data: order } = await supabase.from('orders').select('id,status').eq('id', orderId).eq('company_id', profile.company_id).maybeSingle()
+  const { data: order } = await supabase.from('orders').select('id,status,driver_id').eq('id', orderId).eq('company_id', profile.company_id).maybeSingle()
   if (!order) return { error: 'Pedido não encontrado.' }
 
   const transition = transitions[order.status]
@@ -36,7 +36,13 @@ export async function advanceOrder(orderId: string) {
   const { error } = await supabase.from('orders').update({ status: transition.next, ...timestamps }).eq('id', orderId).eq('company_id', profile.company_id)
   if (error) return { error: error.message }
 
+  if (transition.next === 'delivered' && order.driver_id) {
+    await supabase.from('drivers').update({ is_available: true }).eq('id', order.driver_id).eq('company_id', profile.company_id)
+  }
+
   revalidatePath('/empresa')
+  revalidatePath('/empresa/pedidos')
+  revalidatePath('/empresa/entregadores')
   return { ok: true, status: transition.next }
 }
 
@@ -49,5 +55,6 @@ export async function rejectOrder(orderId: string) {
   const { error } = await supabase.from('orders').update({ status: 'rejected' }).eq('id', orderId).eq('company_id', profile.company_id).eq('status', 'pending')
   if (error) return { error: error.message }
   revalidatePath('/empresa')
+  revalidatePath('/empresa/pedidos')
   return { ok: true }
 }
