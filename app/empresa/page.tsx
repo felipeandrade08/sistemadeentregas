@@ -5,7 +5,7 @@ import OrderActions from './pedidos/OrderActions'
 import AssignDriver from './pedidos/AssignDriver'
 import RealtimeOrders from './pedidos/RealtimeOrders'
 
-const columns = [['pending', 'Novos'], ['accepted', 'Aceitos'], ['preparing', 'Em preparação'], ['ready', 'Prontos']] as const
+const columns = [['pending', 'Novos'], ['accepted', 'Aceitos'], ['preparing', 'Em preparação'], ['ready', 'Prontos'], ['out_for_delivery', 'Em entrega']] as const
 
 export default async function EmpresaPage() {
   const supabase = await createClient()
