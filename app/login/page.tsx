@@ -17,15 +17,16 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
 
-    if (error) {
+    if (error || !data.user) {
       setError('E-mail ou senha inválidos.')
       setLoading(false)
       return
     }
 
-    router.replace('/empresa')
+    const { data: profile } = await supabase.from('profiles').select('company_id').eq('id', data.user.id).maybeSingle()
+    router.replace(profile?.company_id ? '/empresa' : '/empresa/configurar')
     router.refresh()
   }
 
@@ -36,24 +37,13 @@ export default function LoginPage() {
         <p className="eyebrow">ENTREGAOS</p>
         <h1>Entrar no painel</h1>
         <p className="muted">Gerencie pedidos, produtos e entregas da sua empresa.</p>
-
         <form onSubmit={handleLogin} className="auth-form">
-          <label>
-            E-mail
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@empresa.com" required />
-          </label>
-          <label>
-            Senha
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} />
-          </label>
-
+          <label>E-mail<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@empresa.com" required /></label>
+          <label>Senha<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} /></label>
           {error && <div className="form-error">{error}</div>}
-
-          <button className="primary-button" disabled={loading}>
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
+          <button className="primary-button" disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</button>
         </form>
-
+        <p className="muted" style={{ marginTop: 18 }}>Ainda não possui conta? <a href="/cadastro">Criar conta</a></p>
         <a href="/" className="back-link">← Voltar para o início</a>
       </section>
     </main>
