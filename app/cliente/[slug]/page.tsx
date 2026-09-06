@@ -97,7 +97,7 @@ export default function LojaPage({ params }: { params: { slug: string } }) {
     if (delivery?.pricing_type === 'per_km' && (km === null || !Number.isFinite(km) || km < 0)) {
       setError('Informe a distância aproximada da entrega em km.'); setSending(false); return
     }
-    if (delivery?.max_distance_km !== null && km !== null && km > Number(delivery.max_distance_km)) {
+    if (delivery && delivery.max_distance_km !== null && km !== null && km > Number(delivery.max_distance_km)) {
       setError(`A loja atende entregas de até ${Number(delivery.max_distance_km).toFixed(1).replace('.', ',')} km.`); setSending(false); return
     }
     const { data, error: orderError } = await supabase.rpc('create_public_order', {
