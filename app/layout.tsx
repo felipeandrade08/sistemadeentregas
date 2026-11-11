@@ -11,8 +11,11 @@ export const metadata: Metadata = {
   description: "Pedidos e entregas organizados para o seu comércio.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: [{ url: "/icons/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/icons/icon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/icons/icon-192.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/icons/icon-512.svg", sizes: "512x512", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icons/icon-192.svg", sizes: "192x192", type: "image/svg+xml" }],
   },
   appleWebApp: {
     capable: true,
