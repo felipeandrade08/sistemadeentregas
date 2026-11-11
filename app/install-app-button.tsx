@@ -7,6 +7,16 @@ type InstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 };
 
+const buttonStyle: React.CSSProperties = {
+  border: "1px solid rgba(53,217,245,.55)",
+  borderRadius: 12,
+  padding: "13px 18px",
+  background: "rgba(53,217,245,.10)",
+  color: "#35D9F5",
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
 export default function InstallAppButton() {
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const [isIos, setIsIos] = useState(false);
@@ -39,15 +49,11 @@ export default function InstallAppButton() {
 
   if (installPrompt) {
     return (
-      <button
-        type="button"
-        className="install-app-button"
-        onClick={async () => {
-          await installPrompt.prompt();
-          await installPrompt.userChoice;
-          setInstallPrompt(null);
-        }}
-      >
+      <button type="button" style={buttonStyle} onClick={async () => {
+        await installPrompt.prompt();
+        await installPrompt.userChoice;
+        setInstallPrompt(null);
+      }}>
         Instalar aplicativo
       </button>
     );
@@ -55,11 +61,9 @@ export default function InstallAppButton() {
 
   if (isIos) {
     return (
-      <button
-        type="button"
-        className="install-app-button install-app-button--secondary"
-        onClick={() => window.alert("Para instalar o EntregaOS no iPhone: toque em Compartilhar no Safari e escolha 'Adicionar à Tela de Início'.")}
-      >
+      <button type="button" style={buttonStyle} onClick={() => window.alert(
+        "Para instalar o EntregaOS no iPhone: toque em Compartilhar no Safari e escolha 'Adicionar à Tela de Início'."
+      )}>
         Como instalar no iPhone
       </button>
     );
