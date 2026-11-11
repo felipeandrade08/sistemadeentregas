@@ -1,5 +1,5 @@
 const CACHE_NAME = "entregaos-shell-v1";
-const APP_SHELL = ["/offline.html", "/icons/icon.svg", "/icons/icon-maskable.svg"];
+const APP_SHELL = ["/offline.html", "/icons/icon.svg", "/icons/icon-192.svg", "/icons/icon-512.svg", "/icons/icon-maskable.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
